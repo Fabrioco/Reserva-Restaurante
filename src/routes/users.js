@@ -2,6 +2,7 @@ const Express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const routerUser = Express.Router();
+const jwt = require("jsonwebtoken");
 
 routerUser.post("/register", async (req, res) => {
   try {
@@ -22,6 +23,27 @@ routerUser.post("/register", async (req, res) => {
     res.status(201).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+routerUser.post("/login", async (req, res) => {
+  try {
+    const { email, senha, role } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: "Email não encontrado" });
+    }
+    const passwordVerify = await bcrypt.compare(senha, user.senha);
+    if (!passwordVerify) {
+      return res.status(400).json({ error: "Senha incorreta" });
+    }
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: 300,
+    });
+
+    return res.status(200).json({ message: "Login feito com sucesso", token });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 });
 
