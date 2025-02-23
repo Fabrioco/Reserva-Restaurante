@@ -2,17 +2,17 @@ const { DataTypes } = require("sequelize");
 const database = require("../config/database");
 
 module.exports = () => {
-  const Table = database.define("table", {
+  const Table = database.define("mesas", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
+    nome: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    capacity: {
+    capacidade: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
