@@ -15,7 +15,7 @@ routerTables.get("/", middleware, async (req, res) => {
 
 routerTables.post("/", middleware, async (req, res) => {
   const role = req.user.role;
-  if (role != "administrador")
+  if (role != "Administrador")
     return res
       .status(500)
       .json({ message: "Você não tem permissão para adicionar uma mesa" });
@@ -39,6 +39,30 @@ routerTables.post("/", middleware, async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
+  }
+});
+
+routerTables.patch("/:id", middleware, async (req, res) => {
+  try {
+    const updates = req.body;
+    const { id } = req.params;
+
+    const table = await Table.findOne({ id: id });
+    if (!table) {
+      return res.status(404).json({ error: "Mesa não encontrada" });
+    }
+
+    Object.keys(updates).forEach((key) => {
+      if (table[key] !== undefined) {
+        table[key] = updates[key];
+      }
+    });
+
+    await table.save();
+
+    res.json(table);
+  } catch (error) {
+    res.json({ error: error.message });
   }
 });
 
