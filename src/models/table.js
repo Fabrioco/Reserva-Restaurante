@@ -9,8 +9,8 @@ const Table = database.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    nome: {
-      type: DataTypes.STRING,
+    numero: {
+      type: DataTypes.INTEGER ,
       allowNull: false,
     },
     capacidade: {
