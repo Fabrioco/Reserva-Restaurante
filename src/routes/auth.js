@@ -22,7 +22,7 @@ routerAuth.post("/register", async (req, res) => {
     });
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: 300,
+      expiresIn: "1d",
     });
     res.status(201).json({ message: "Registro feito com sucesso", token });
   } catch (error) {
@@ -42,7 +42,7 @@ routerAuth.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Senha incorreta" });
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: 300,
+      expiresIn: "1d",
     });
 
     return res.status(200).json({ message: "Login feito com sucesso", token });
