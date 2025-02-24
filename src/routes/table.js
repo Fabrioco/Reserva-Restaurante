@@ -13,4 +13,13 @@ routerTables.get("/", middleware, async (req, res) => {
   }
 });
 
+routerTables.post("/", middleware, async (req, res) => {
+  try {
+    const role = req.user.role;
+    console.log(role);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = routerTables;
