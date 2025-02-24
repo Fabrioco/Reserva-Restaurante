@@ -14,11 +14,31 @@ routerTables.get("/", middleware, async (req, res) => {
 });
 
 routerTables.post("/", middleware, async (req, res) => {
+  const role = req.user.role;
+  if (role != "administrador")
+    return res
+      .status(500)
+      .json({ message: "Você não tem permissão para adicionar uma mesa" });
   try {
-    const role = req.user.role;
-    console.log(role);
+    const { nome, capacidade, status } = req.body;
+    const nomeExists = await Table.findOne({ where: { nome } });
+    if (nomeExists) {
+      return res.status(401).json({ message: "Essa mesa já existe" });
+    }
+    if (!capacidade) {
+      return res.status(401).json({ message: "A mesa precisa de quantidade" });
+    }
+    const table = await Table.create({
+      nome,
+      capacidade,
+      status: "Disponível",
+    });
+    return res.status(200).json({
+      message: "Mesa criada com sucesso",
+      table,
+    });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 });
 
