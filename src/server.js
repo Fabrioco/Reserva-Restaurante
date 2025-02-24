@@ -1,6 +1,6 @@
 const Express = require("express");
 const database = require("./config/database");
-const routerUser = require("./routes/users");
+const routerAuth = require("./routes/auth");
 require("dotenv").config();
 
 const PORT = process.env.PORT || 5000;
@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 const app = Express();
 
 app.use(Express.json());
-app.use("/api/auth", routerUser);
+app.use("/api/auth", routerAuth);
 
 database.sync().then(() => {
   app.listen(PORT, () => {
