@@ -66,4 +66,27 @@ routerTables.patch("/:id", middleware, async (req, res) => {
   }
 });
 
+routerTables.delete("/:id", middleware, async (req, res) => {
+  const { id } = req.params;
+  const role = req.user.role;
+  if (role != "Administrador") {
+    return res
+      .status(500)
+      .json({ message: "Você não tem permissão para excluir a mesa!" });
+  }
+  try {
+    const table = await Table.findOne({ id: id });
+    if (!table) {
+      return res.status(404).json({ error: "Mesa não encontrada" });
+    }
+    table
+      .destroy()
+      .then(() =>
+        res.status(200).json({ message: "Mesa excluída com sucesso", table })
+      );
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = routerTables;
