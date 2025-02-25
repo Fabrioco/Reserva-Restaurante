@@ -57,4 +57,27 @@ routerReserve.get("/", middleware, async (req, res) => {
   }
 });
 
+routerReserve.delete("/:id/cancelar", middleware, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const reserve = await Reserve.findOne({ where: { id } });
+  
+    if (!reserve) {
+      return res.status(404).json({ message: "Reserva não encontrada" });
+    }
+    const table = await Table.findOne({ where: { id: reserve.mesa_id } });
+    if (table) {
+      table.status = "Disponível";
+      await table.save();
+    
+    }
+    await reserve.destroy();
+
+    res.status(200).json({ message: "Reserva cancelada" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = routerReserve;
