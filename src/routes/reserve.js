@@ -15,6 +15,12 @@ routerReserve.post("/", middleware, async (req, res) => {
       return res.status(404).json({ message: "Essa mesa não existe" });
     }
 
+    if (table.status === "Reservada") {
+      return res.status(400).json({ message: "Essa mesa já foi reservada" });
+    } else if (table.status === "Inativa") {
+      return res.status(400).json({ message: "Essa mesa está inativa" });
+    }
+
     if (table.capacidade < quantityPeople) {
       return res.status(500).json({
         message: "Infelizmente a mesa não atende a capacidade necessária!",
@@ -29,7 +35,11 @@ routerReserve.post("/", middleware, async (req, res) => {
       data_reserva: dataReservada,
       status: "Ativo",
     });
-    res.json({ reserve });
+    if (reserve) {
+      table.status = "Reservada";
+      await table.save();
+    }
+    res.status(201).json(reserve);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
