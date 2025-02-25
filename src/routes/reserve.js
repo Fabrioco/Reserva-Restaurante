@@ -10,7 +10,7 @@ routerReserve.post("/", middleware, async (req, res) => {
     const userId = req.user.id;
     const { tableNumber, quantityPeople, time } = req.body;
     const table = await Table.findOne({ where: { numero: tableNumber } });
-    
+
     if (!table) {
       return res.status(404).json({ message: "Essa mesa não existe" });
     }
@@ -30,6 +30,18 @@ routerReserve.post("/", middleware, async (req, res) => {
       status: "Ativo",
     });
     res.json({ reserve });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+routerReserve.get("/", middleware, async (req, res) => {
+  try {
+    const reserves = await Reserve.findAll();
+    const reservesFiltered = reserves.filter(
+      (reserve) => reserve.usuario_id === req.user.id
+    );
+    res.status(200).json(reservesFiltered);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
