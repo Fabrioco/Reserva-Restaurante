@@ -10,9 +10,15 @@ routerReserve.post("/", middleware, async (req, res) => {
     const userId = req.user.id;
     const { tableNumber, quantityPeople, time } = req.body;
     const table = await Table.findOne({ where: { numero: tableNumber } });
-    
+
     if (!table) {
       return res.status(404).json({ message: "Essa mesa não existe" });
+    }
+
+    if (table.status === "Reservada") {
+      return res.status(400).json({ message: "Essa mesa já foi reservada" });
+    } else if (table.status === "Inativa") {
+      return res.status(400).json({ message: "Essa mesa está inativa" });
     }
 
     if (table.capacidade < quantityPeople) {
@@ -29,7 +35,23 @@ routerReserve.post("/", middleware, async (req, res) => {
       data_reserva: dataReservada,
       status: "Ativo",
     });
-    res.json({ reserve });
+    if (reserve) {
+      table.status = "Reservada";
+      await table.save();
+    }
+    res.status(201).json(reserve);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+routerReserve.get("/", middleware, async (req, res) => {
+  try {
+    const reserves = await Reserve.findAll();
+    const reservesFiltered = reserves.filter(
+      (reserve) => reserve.usuario_id === req.user.id
+    );
+    res.status(200).json(reservesFiltered);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
