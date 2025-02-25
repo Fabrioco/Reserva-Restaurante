@@ -20,7 +20,10 @@ routerTables.post("/", middleware, async (req, res) => {
       .status(500)
       .json({ message: "Você não tem permissão para adicionar uma mesa" });
   try {
-    const { numero, capacidade, status } = req.body;
+    const { numero, capacidade } = req.body;
+    if ((!numero, !capacidade)) {
+      return res.status(401).json({ message: "Preencha todos os campos" });
+    }
     const numeroExists = await Table.findOne({ where: { numero } });
     if (numeroExists) {
       return res.status(401).json({ message: "Essa mesa já existe" });
@@ -45,6 +48,9 @@ routerTables.post("/", middleware, async (req, res) => {
 routerTables.patch("/:id", middleware, async (req, res) => {
   try {
     const updates = req.body;
+    if (!updates) {
+      return res.status(401).json({ message: "Preencha todos os campos" });
+    }
     const { id } = req.params;
 
     const table = await Table.findOne({ id: id });

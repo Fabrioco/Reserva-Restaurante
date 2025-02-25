@@ -9,6 +9,9 @@ routerReserve.post("/", middleware, async (req, res) => {
   try {
     const userId = req.user.id;
     const { tableNumber, quantityPeople, time } = req.body;
+    if (!tableNumber || !quantityPeople|| !time) {
+      return res.status(401).json({message: 'Preencha todos os campos'})
+    }
     const table = await Table.findOne({ where: { numero: tableNumber } });
 
     if (!table) {

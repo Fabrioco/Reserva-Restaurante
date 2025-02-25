@@ -7,6 +7,11 @@ const jwt = require("jsonwebtoken");
 routerAuth.post("/register", async (req, res) => {
   try {
     const { nome, email, senha, role } = req.body;
+
+    if (!nome || !email || !senha || !role) {
+      return res.status(401).json({ message: "Preencha todos os campos" });
+    }
+
     const emailExists = await User.findOne({ where: { email } });
 
     if (emailExists) {
@@ -32,7 +37,12 @@ routerAuth.post("/register", async (req, res) => {
 
 routerAuth.post("/login", async (req, res) => {
   try {
-    const { email, senha, role } = req.body;
+    const { email, senha } = req.body;
+
+    if (!email || !senha) {
+      return res.status(401).json({ message: "Preencha todos os campos" });
+    }
+
     const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ error: "Email não encontrado" });
