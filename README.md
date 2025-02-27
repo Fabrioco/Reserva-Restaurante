@@ -55,11 +55,10 @@ O servidor estará rodando em http://localhost:5000.
 
 # Endpoints da API
 
-## Autenticação
-    ```bash                  
+**Autenticação**
+    ```                  
     POST /usuarios/registrar 
 — Cadastro de novos usuários.
-
     ```bash
     POST /usuarios/login
 — Login de usuários e geração de token JWT.
