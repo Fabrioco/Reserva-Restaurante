@@ -55,21 +55,35 @@ O servidor estará rodando em http://localhost:5000.
 
 # Endpoints da API
 
-**Autenticação**
-    ```                  
+1.**Autenticação**
+                 
     POST /usuarios/registrar 
 — Cadastro de novos usuários.
-    ```bash
+   
     POST /usuarios/login
 — Login de usuários e geração de token JWT.
-## Mesas
-    ```bash
-    GET /mesas
+
+**Mesas**
+    
+    GET /mesas 
 — Lista todas as mesas e seus status.
-POST /mesas — Adiciona uma nova mesa (apenas administradores).
-PATCH /mesas/:id — Atualiza informações de uma mesa.
-DELETE /mesas/:id — Remove uma mesa (apenas administradores).
-Reservas
-POST /reservas — Cria uma nova reserva, validando disponibilidade e a capacidade da mesa.
-GET /reservas — Lista todas as reservas do usuário autenticado.
-PATCH /reservas/:id/cancelar — Cancela uma reserva ativa.
+
+    POST /mesas
+— Adiciona uma nova mesa (apenas administradores).
+
+    PATCH /mesas/:id
+— Atualiza informações de uma mesa.
+
+    DELETE /mesas/:id
+— Remove uma mesa (apenas administradores).
+
+3.**Reservas**
+
+    POST /reservas
+— Cria uma nova reserva, validando disponibilidade e a capacidade da mesa.
+
+    GET /reservas
+— Lista todas as reservas do usuário autenticado.
+
+    PATCH /reservas/:id/cancelar 
+— Cancela uma reserva ativa.
